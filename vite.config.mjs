@@ -5,9 +5,19 @@ import autoprefixer from 'autoprefixer'
 
 export default defineConfig(() => {
   return {
-    base: './',
+    base: './',  // Ensure that assets are correctly linked in the relative context
     build: {
-      outDir: 'build',
+      outDir: 'build',  // The build output directory
+      rollupOptions: {
+        output: {
+          // Improve chunk splitting
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return 'vendor'; // Bundle node_modules into a separate chunk
+            }
+          },
+        },
+      },
     },
     css: {
       postcss: {
@@ -18,14 +28,14 @@ export default defineConfig(() => {
     },
     esbuild: {
       loader: 'jsx',
-      include: /src\/.*\.jsx?$/,
-      exclude: [],
+      include: /src\/.*\.jsx?$/, // Specify files to transpile with esbuild
+      exclude: [], // Exclude none, if needed, you can define exclusions
     },
     optimizeDeps: {
-      force: true,
+      force: true, // Force Vite to pre-optimize dependencies
       esbuildOptions: {
         loader: {
-          '.js': 'jsx',
+          '.js': 'jsx', // Specify .js files to use JSX loader
         },
       },
     },
@@ -33,7 +43,7 @@ export default defineConfig(() => {
     resolve: {
       alias: [
         {
-          find: 'src/',
+          find: 'src/',  // Custom alias for the 'src' directory
           replacement: `${path.resolve(__dirname, 'src')}/`,
         },
       ],
@@ -42,8 +52,12 @@ export default defineConfig(() => {
     server: {
       port: 3000,
       proxy: {
-        // https://vitejs.dev/config/server-options.html
+        // Proxy configurations if needed for API calls
       },
+    },
+    // Configure chunk size warning limit if needed (to suppress large chunk warnings)
+    build: {
+      chunkSizeWarningLimit: 1000, // This will suppress the warning if the chunk size exceeds 500 KB
     },
   }
 })
