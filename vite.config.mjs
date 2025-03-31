@@ -18,6 +18,7 @@ export default defineConfig(() => {
           },
         },
       },
+      chunkSizeWarningLimit: 1000, // This will suppress the warning if the chunk size exceeds 1000 KB
     },
     css: {
       postcss: {
@@ -54,10 +55,6 @@ export default defineConfig(() => {
       proxy: {
         // Proxy configurations if needed for API calls
       },
-    },
-    // Configure chunk size warning limit if needed (to suppress large chunk warnings)
-    build: {
-      chunkSizeWarningLimit: 1000, // This will suppress the warning if the chunk size exceeds 500 KB
     },
   }
 })
